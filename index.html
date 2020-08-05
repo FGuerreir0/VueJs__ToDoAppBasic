@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>VueJs - Basic ToDo App</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="text/javascript" src="https://unpkg.com/vue"></script>
+  </head>
+  <body>
+    <div class="postit_style">
+      <div id="app">
+        <h1>Task Manager</h1>
+        <h2>{{ formatDate }}</h2>
+        <ul class="tasks_style">
+          <div>
+            <li><h3>To be done:</h3></li>
+            <hr />
+            <li v-for="task in tasks" v-on:click="taskDone(task)">{{ task }}</li>
+          </div>
+          <div>
+            <li><h3>Achieved:</h3></li>
+            <hr />
+            <li v-for="task in finished" v-on:click="taskUndone(task)">{{ task }}</li>
+          </div>
+        </ul>
+        <ul>
+          <li style="margin-top: 50px;">
+            <input
+              type="text"
+              v-model="input"
+              placeholder="Write here the task for today"
+              v-on:keyup.enter="addTask"
+            />
+          </li>
+          <li>
+            <button v-on:click="addTask">Add Task</button>
+            <button v-on:click="clearAll">Clear All</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script type="text/javascript">
+      new Vue({
+        el: '#app',
+        data: {
+          tasks: [],
+          input: '',
+          finished: []
+        },
+        methods: {
+          addTask: function () {
+            this.input.length > 0 ? this.tasks.push(this.input) : this.error();
+            this.input = '';
+          },
+          clearAll: function () {
+            this.tasks = [];
+            this.finished = [];
+          },
+          error: function () {
+            alert('You need to add a task first!');
+          },
+          taskDone: function (task) {
+            this.tasks.splice(this.tasks.indexOf(task), 1);
+            this.finished.push(task);
+          },
+          taskUndone: function (task) {
+            this.finished.splice(this.finished.indexOf(task), 1);
+            this.tasks.push(task);
+          }
+        },
+        computed: {
+          formatDate: function () {
+            const today = new Date();
+            const day = today.getDate();
+            const month = today.getMonth() + 1;
+            const year = today.getFullYear();
+            return `${day}/${month}/${year}`;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
